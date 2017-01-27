@@ -100,118 +100,121 @@ def CalculateAnchor():
 	Points["hanche"] = CalculateCenter(hanche)
 
 def CreateSkeleton():
-	skeleton = Skeleton()
+    skeleton = Skeleton()
+    
+    bone = Bone("hips", Points["hanche"], Points["hanche"]+Vector((0.1,0.1,0.1)),  "", False)
+    skeleton.AddBone(bone)
 
-	#spine01
-	headPoint = (Points["cou"] - Points["hanche"]) / 3 + Points["hanche"]
-	bone = Bone("spine01", Points["hanche"], headPoint,  "", False)
-	skeleton.AddBone(bone)
+    #spine01
+    headPoint = (Points["cou"] - Points["hanche"]) / 3 + Points["hanche"]
+    bone = Bone("spine01", skeleton.GetBoneByName("hips").tail, headPoint,  "hips", True)
+    skeleton.AddBone(bone)
 
-	#spine02
-	headPoint = (Points["cou"] - Points["hanche"]) / 3 + skeleton.GetBoneByName("spine01").tail
-	bone = Bone("spine02", skeleton.GetBoneByName("spine01").tail,headPoint,  "spine01", True)
-	skeleton.AddBone(bone)
-	
-	#spine03
-	headPoint = (Points["cou"] - Points["hanche"]) / 3 + skeleton.GetBoneByName("spine02").tail
-	bone = Bone("spine03", skeleton.GetBoneByName("spine02").tail,headPoint,  "spine02", True)
-	skeleton.AddBone(bone)
+    #spine02
+    headPoint = (Points["cou"] - Points["hanche"]) / 3 + skeleton.GetBoneByName("spine01").tail
+    bone = Bone("spine02", skeleton.GetBoneByName("spine01").tail,headPoint,  "spine01", True)
+    skeleton.AddBone(bone)
+    
+    #spine03
+    headPoint = (Points["cou"] - Points["hanche"]) / 3 + skeleton.GetBoneByName("spine02").tail
+    bone = Bone("spine03", skeleton.GetBoneByName("spine02").tail,headPoint,  "spine02", True)
+    skeleton.AddBone(bone)
 
-	#head
-	bone = Bone("head", skeleton.GetBoneByName("spine03").tail,Points["tete"],  "spine03", True)
-	skeleton.AddBone(bone)
+    #head
+    bone = Bone("head", skeleton.GetBoneByName("spine03").tail,Points["tete"],  "spine03", True)
+    skeleton.AddBone(bone)
 
-	#thigh.L
-	bone = Bone("thigh.L", Points["hanche"], Points["genoux.G"], "", True)
-	skeleton.AddBone(bone)
+    #thigh.L
+    bone = Bone("thigh.L", Points["hanche"], Points["genoux.G"], "hips", True)
+    skeleton.AddBone(bone)
 
-	#calve.L
-	bone = Bone("calve.L", Points["genoux.G"], Points["cheville.G"], "thigh.L", True)
-	skeleton.AddBone(bone)
+    #calve.L
+    bone = Bone("calve.L", Points["genoux.G"], Points["cheville.G"], "thigh.L", True)
+    skeleton.AddBone(bone)
 
-	#foot.L
-	bone = Bone("foot.L", Points["cheville.G"], Points["pied.G"], "calve.L", True)
-	skeleton.AddBone(bone)
+    #foot.L
+    bone = Bone("foot.L", Points["cheville.G"], Points["pied.G"], "calve.L", True)
+    skeleton.AddBone(bone)
 
-	#thigh.R
-	bone = Bone("thigh.R", Points["hanche"], Points["genoux.D"], "", True)
-	skeleton.AddBone(bone)
+    #thigh.R
+    bone = Bone("thigh.R", Points["hanche"], Points["genoux.D"], "hips", True)
+    skeleton.AddBone(bone)
 
-	#calve.R
-	bone = Bone("calve.R", Points["genoux.D"], Points["cheville.D"], "thigh.R", True)
-	skeleton.AddBone(bone)
+    #calve.R
+    bone = Bone("calve.R", Points["genoux.D"], Points["cheville.D"], "thigh.R", True)
+    skeleton.AddBone(bone)
 
-	#foot.R
-	bone = Bone("foot.R", Points["cheville.D"], Points["pied.D"], "calve.R", True)
-	skeleton.AddBone(bone)
+    #foot.R
+    bone = Bone("foot.R", Points["cheville.D"], Points["pied.D"], "calve.R", True)
+    skeleton.AddBone(bone)
 
-	#clavicle.R
-	tailPoint = (Points["cou"] - Points["hanche"]) / 6 + skeleton.GetBoneByName("spine02").tail
-	bone = Bone("clavicle.R", tailPoint,Points["epaule.D"],  "spine02", True)
-	skeleton.AddBone(bone)
+    #clavicle.R
+    tailPoint = (Points["cou"] - Points["hanche"]) / 6 + skeleton.GetBoneByName("spine02").tail
+    bone = Bone("clavicle.R", tailPoint,Points["epaule.D"],  "spine02", True)
+    skeleton.AddBone(bone)
 
-	#arm.R
-	bone = Bone("arm.R", skeleton.GetBoneByName("clavicle.R").tail,Points["coude.D"],  "clavicle.R", True)
-	skeleton.AddBone(bone)
+    #arm.R
+    bone = Bone("arm.R", skeleton.GetBoneByName("clavicle.R").tail,Points["coude.D"],  "clavicle.R", True)
+    skeleton.AddBone(bone)
 
-	#underarm.R
-	bone = Bone("underarm.R", skeleton.GetBoneByName("arm.R").tail,Points["poignet.D"],  "arm.R", True)
-	skeleton.AddBone(bone)
+    #underarm.R
+    bone = Bone("underarm.R", skeleton.GetBoneByName("arm.R").tail,Points["poignet.D"],  "arm.R", True)
+    skeleton.AddBone(bone)
 
-	#thumb.R
-	bone = Bone("thumb.R", skeleton.GetBoneByName("underarm.R").tail,Points["pouce.D"],  "underarm.R", True)
-	skeleton.AddBone(bone)
+    #thumb.R
+    bone = Bone("thumb.R", skeleton.GetBoneByName("underarm.R").tail,Points["pouce.D"],  "underarm.R", True)
+    skeleton.AddBone(bone)
 
-	#index.R
-	bone = Bone("index.R", skeleton.GetBoneByName("underarm.R").tail,Points["index.D"],  "underarm.R", True)
-	skeleton.AddBone(bone)
+    #index.R
+    bone = Bone("index.R", skeleton.GetBoneByName("underarm.R").tail,Points["index.D"],  "underarm.R", True)
+    skeleton.AddBone(bone)
 
-	#major.R
-	bone = Bone("major.R", skeleton.GetBoneByName("underarm.R").tail,Points["majeur.D"],  "underarm.R", True)
-	skeleton.AddBone(bone)
+    #major.R
+    bone = Bone("major.R", skeleton.GetBoneByName("underarm.R").tail,Points["majeur.D"],  "underarm.R", True)
+    skeleton.AddBone(bone)
 
-	#annular.R
-	bone = Bone("annular.R", skeleton.GetBoneByName("underarm.R").tail,Points["annulaire.D"],  "underarm.R", True)
-	skeleton.AddBone(bone)
+    #annular.R
+    bone = Bone("annular.R", skeleton.GetBoneByName("underarm.R").tail,Points["annulaire.D"],  "underarm.R", True)
+    skeleton.AddBone(bone)
 
-	#atrial.R
-	bone = Bone("atrial.R", skeleton.GetBoneByName("underarm.R").tail,Points["auriculaire.D"],  "underarm.R", True)
-	skeleton.AddBone(bone)
+    #atrial.R
+    bone = Bone("atrial.R", skeleton.GetBoneByName("underarm.R").tail,Points["auriculaire.D"],  "underarm.R", True)
+    skeleton.AddBone(bone)
 
-	#clavicle.L
-	tailPoint = (Points["cou"] - Points["hanche"]) / 6 + skeleton.GetBoneByName("spine02").tail
-	bone = Bone("clavicle.L", tailPoint,Points["epaule.G"],  "spine02", True)
-	skeleton.AddBone(bone)
+    #clavicle.L
+    tailPoint = (Points["cou"] - Points["hanche"]) / 6 + skeleton.GetBoneByName("spine02").tail
+    bone = Bone("clavicle.L", tailPoint,Points["epaule.G"],  "spine02", True)
+    skeleton.AddBone(bone)
 
-	#arm.L
-	bone = Bone("arm.L", skeleton.GetBoneByName("clavicle.L").tail,Points["coude.G"],  "clavicle.L", True)
-	skeleton.AddBone(bone)
+    #arm.L
+    bone = Bone("arm.L", skeleton.GetBoneByName("clavicle.L").tail,Points["coude.G"],  "clavicle.L", True)
+    skeleton.AddBone(bone)
 
-	#underarm.L
-	bone = Bone("underarm.L", skeleton.GetBoneByName("arm.L").tail,Points["poignet.G"],  "arm.L", True)
-	skeleton.AddBone(bone)
+    #underarm.L
+    bone = Bone("underarm.L", skeleton.GetBoneByName("arm.L").tail,Points["poignet.G"],  "arm.L", True)
+    skeleton.AddBone(bone)
 
-	#thumb.L
-	bone = Bone("thumb.L", skeleton.GetBoneByName("underarm.L").tail,Points["pouce.G"],  "underarm.L", True)
-	skeleton.AddBone(bone)
+    #thumb.L
+    bone = Bone("thumb.L", skeleton.GetBoneByName("underarm.L").tail,Points["pouce.G"],  "underarm.L", True)
+    skeleton.AddBone(bone)
 
-	#index.L
-	bone = Bone("index.L", skeleton.GetBoneByName("underarm.L").tail,Points["index.G"],  "underarm.L", True)
-	skeleton.AddBone(bone)
+    #index.L
+    bone = Bone("index.L", skeleton.GetBoneByName("underarm.L").tail,Points["index.G"],  "underarm.L", True)
+    skeleton.AddBone(bone)
 
-	#major.L
-	bone = Bone("major.L", skeleton.GetBoneByName("underarm.L").tail,Points["majeur.G"],  "underarm.L", True)
-	skeleton.AddBone(bone)
+    #major.L
+    bone = Bone("major.L", skeleton.GetBoneByName("underarm.L").tail,Points["majeur.G"],  "underarm.L", True)
+    skeleton.AddBone(bone)
 
-	#annular.L
-	bone = Bone("annular.L", skeleton.GetBoneByName("underarm.L").tail,Points["annulaire.G"],  "underarm.L", True)
-	skeleton.AddBone(bone)
+    #annular.L
+    bone = Bone("annular.L", skeleton.GetBoneByName("underarm.L").tail,Points["annulaire.G"],  "underarm.L", True)
+    skeleton.AddBone(bone)
 
-	#atrial.L
-	bone = Bone("atrial.L", skeleton.GetBoneByName("underarm.L").tail,Points["auriculaire.G"],  "underarm.L", True)
-	skeleton.AddBone(bone)
+    #atrial.L
+    bone = Bone("atrial.L", skeleton.GetBoneByName("underarm.L").tail,Points["auriculaire.G"],  "underarm.L", True)
+    skeleton.AddBone(bone)
 
-	return skeleton
+    return skeleton
 
 def GetBoneByName(amt, name):
 	if name == "":
@@ -244,15 +247,221 @@ def DrawSkeleton(skeleton):
 
 	return ob
 
+#---------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------
+#START OF AUTO RETARGETING--------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------
+
+def importbvh(file_path = "07_02"):
+    try:
+        file = file_path + ".bvh"
+        bpy.ops.import_anim.bvh(filepath=file,
+        axis_forward='-Z', axis_up='Y', filter_glob="*.bvh",
+        target='ARMATURE', global_scale=1.0, frame_start=1,
+        use_fps_scale=False, update_scene_fps=False,
+        update_scene_duration=False, use_cyclic=False,
+        rotate_mode='NATIVE')
+        bvh_armature = bpy.data.objects[file_path]
+    except:
+        print ("Couldn't open file")
+    return bvh_armature
+    
+def scalebvh(bvh_armature, armature):
+    perf_bones = bvh_armature.data.bones
+    end_bones = armature.data.bones
+    def calculateBoundingRadius(bones):
+        center = sum((bone.head_local for bone in bones), Vector())
+        center /= len(bones)
+        radius = max((bone.head_local - center).length for bone in bones)
+        return radius
+    perf_rad = calculateBoundingRadius(perf_bones)
+    end_rad = calculateBoundingRadius(end_bones)
+    factor = end_rad / perf_rad
+    bvh_armature.scale = factor * Vector((1, 1, 1))
+    return factor
+    
+def associateArmature(bvh_arm, arm):
+    map = {}
+    bpy.ops.object.mode_set(mode='EDIT')
+    for bone in bvh_arm.data.bones:
+        test = False
+        if("L." in bone.name or "Left" in bone.name or "L " in bone.name or ".L" in bone.name):
+            if("upleg" in bone.name.lower() or "thigh" in bone.name.lower()):
+                map["thigh.L"] = bone.name
+            elif("leg" in bone.name.lower() or "calve" in bone.name.lower()):
+                map["calve.L"] = bone.name
+            elif("foot" in bone.name.lower() or "toe" in bone.name.lower()):
+                map["foot.L"] = bone.name
+            elif("thumb" in bone.name.lower()):
+                map["thumb.L"] = bone.name
+            elif("forearm" in bone.name.lower() or "underarm" in bone.name.lower()):
+                map["underarm.L"] = bone.name
+            elif("arm" in bone.name.lower()):
+                map["arm.L"] = bone.name
+            elif("shoulder" in bone.name.lower() or "clavicle" in bone.name.lower()):
+                map["clavicle.L"] = bone.name
+            else :
+                test = True
+        elif("R." in bone.name or "Right" in bone.name or "R " in bone.name or ".R" in bone.name):
+            if("upleg" in bone.name.lower() or "thigh" in bone.name.lower()):
+                map["thigh.R"] = bone.name
+            elif("leg" in bone.name.lower() or "calve" in bone.name.lower()):
+                map["calve.R"] = bone.name
+            elif("foot" in bone.name.lower() or "toe" in bone.name.lower()):
+                map["foot.R"] = bone.name
+            elif("thumb" in bone.name.lower()):
+                map["thumb.R"] = bone.name
+            elif("forearm" in bone.name.lower() or "underarm" in bone.name.lower()):
+                map["underarm.R"] = bone.name
+            elif("arm" in bone.name.lower()):
+                map["arm.R"] = bone.name
+            elif("shoulder" in bone.name.lower() or "clavicle" in bone.name.lower()):
+                map["clavicle.R"] = bone.name
+            else :
+                test = True
+        else:
+            if("head" in bone.name.lower()):
+                map["head"] = bone.name
+            elif("spine" in bone.name.lower()):
+                map["spine02"] = bone.name
+            elif("back" in bone.name.lower()):
+                map["spine01"] = bone.name
+            elif("hips" in bone.name.lower()):
+                map["hips"] = bone.name
+            elif("neck" in bone.name.lower()):
+                map["spine03"] = bone.name
+            else:
+                test = True
+    bpy.ops.object.mode_set(mode="OBJECT")
+    return map
+
+def createAnim(bvh_arm, arm, map):
+    bpy.ops.object.mode_set(mode='OBJECT')
+    bpy.ops.object.select_all(action='DESELECT')
+    arm.select = True 
+    arm.animation_data_create()
+    try:
+        arm.animation_data.action = bpy.data.actions.new("temp")
+        arm.animation_data.action.use_fake_user = True
+    except:
+        print("no need to create new action")
+
+def copyTranslate(bvh_arm, arm, map, factor):
+    bpy.ops.object.mode_set(mode='OBJECT')
+    bpy.ops.object.select_all(action='DESELECT')
+    arm.select = True
+    bpy.data.scenes["Scene"].tool_settings.use_keyframe_insert_auto = True
+    current_frame = 0
+    bpy.data.scenes["Scene"].frame_set(current_frame)
+    Tprev = bvh_arm.pose.bones[map['hips']].location.copy()
+    for current_frame in range (1,330,1):
+        bpy.data.scenes["Scene"].frame_set(current_frame)
+        Tnext = bvh_arm.pose.bones[map['hips']].location.copy()
+        T = (Tnext[0] - Tprev[0])*factor, -(Tnext[2] - Tprev[2])*factor, (Tnext[1] - Tprev[1])*factor
+        print(Tnext, " - ", Tprev, "for frame : ", current_frame)
+        bpy.ops.transform.translate(value=T, constraint_axis=(False,False,False), constraint_orientation='GLOBAL')
+        Tprev = bvh_arm.pose.bones[map['hips']].location.copy()
+    bpy.data.scenes["Scene"].tool_settings.use_keyframe_insert_auto = False
+    bpy.ops.object.mode_set(mode='OBJECT')
+    bpy.ops.object.select_all(action='DESELECT')
+
+def copyRotate(bvh_arm, arm, map, factor) :
+    bpy.ops.object.mode_set(mode='OBJECT')
+    bpy.ops.object.select_all(action='DESELECT')
+    arm.select = True
+    bpy.context.scene.objects.active = arm
+    bpy.ops.object.mode_set(mode='POSE')
+    bpy.data.scenes["Scene"].tool_settings.use_keyframe_insert_auto = True
+    for key in map :
+        current_frame = 1
+        bpy.data.scenes["Scene"].frame_set(current_frame)
+        Rprev = bvh_arm.pose.bones[map[key]].rotation_euler.copy()
+        for current_frame in range (2,330,10):
+            arm.data.bones[key].select = True
+            bpy.data.scenes["Scene"].frame_set(current_frame)
+            Rnext = bvh_arm.pose.bones[map[key]].rotation_euler.copy()
+            bpy.ops.transform.rotate(value=-(Rnext[0]-Rprev[0]), axis=(1,0,0), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
+            bpy.ops.transform.rotate(value=-(Rnext[2]-Rprev[2]), axis=(0,1,0), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
+            bpy.ops.transform.rotate(value=-(Rnext[1]-Rprev[1]), axis=(0,0,1), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
+            bvh_arm.pose.bones[map[key]].bbone_rollin = bvh_arm.pose.bones[map[key]].bbone_rollin
+            bvh_arm.pose.bones[map[key]].bbone_rollout = bvh_arm.pose.bones[map[key]].bbone_rollout
+            Rprev = bvh_arm.pose.bones[map[key]].rotation_euler.copy()
+            arm.data.bones[key].select = False
+    bpy.data.scenes["Scene"].tool_settings.use_keyframe_insert_auto = False
+    bpy.ops.object.mode_set(mode='OBJECT')
+    bpy.ops.object.select_all(action='DESELECT')
+
+def changeArmPose(bvh_arm, arm, map, factor):
+    bpy.ops.object.mode_set(mode='OBJECT')
+    bpy.ops.object.select_all(action='DESELECT')
+    arm.select = True
+    bpy.context.scene.objects.active = arm
+    bpy.ops.object.mode_set(mode='POSE')
+    current_frame = 1
+    bpy.data.scenes["Scene"].frame_set(current_frame)
+    for key in map :
+        arm.data.bones[key].select = True
+        Rbvharm = bvh_arm.pose.bones[map[key]].rotation_euler.copy()
+        Rarm = arm.pose.bones[key].rotation_euler.copy()
+        bpy.ops.transform.rotate(value=(Rbvharm[0]-Rarm[0]), axis=(1,0,0), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
+        bpy.ops.transform.rotate(value=(Rbvharm[2]-Rarm[2]), axis=(0,1,0), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
+        bpy.ops.transform.rotate(value=(Rbvharm[1]-Rarm[1]), axis=(0,0,1), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
+        arm.data.bones[key].select = False
+    bpy.ops.object.mode_set(mode='OBJECT')
+    bpy.ops.object.select_all(action='DESELECT')
+
+def rename(bvh_arm, arm, map) :
+    for key in map :
+        if map[key] in arm.data.bones :
+            arm.data.bones[map[key]].name = bvh_arm.data.bones[key].name
+        if map[key] in arm.pose.bones :
+            arm.pose.bones[map[key]].name = bvh_arm.pose.bones[key].name
+
+def playbvh():
+    bpy.data.scenes["Scene"].frame_start = 1
+    bpy.data.scenes["Scene"].frame_end = 330
+    bpy.ops.screen.animation_play()
+    
+
+#---------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------
+#END OF AUTO RETARGETING--------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
 ## MAIN ##
 if __name__ == '__main__':
-	bpy.context.scene.cursor_location = Vector((0.0,0.0,0.0))
-	avatar = bpy.data.objects[0]
-	CalculateAnchor()
-	skeleton = CreateSkeleton()
-	armature = DrawSkeleton(skeleton)
-	bpy.ops.object.mode_set(mode='OBJECT')
-	bpy.ops.object.select_all(action='DESELECT')
-	avatar.select = True
-	armature.select = True
-	bpy.ops.object.parent_set(type='ARMATURE_AUTO')
+    #autorig
+    bpy.context.scene.cursor_location = Vector((0.0,0.0,0.0))
+    avatar = bpy.data.objects[0]
+    CalculateAnchor()
+    skeleton = CreateSkeleton()
+    armature = DrawSkeleton(skeleton)
+    bpy.ops.object.mode_set(mode='OBJECT')
+    bpy.ops.object.select_all(action='DESELECT')
+    avatar.select = True
+    armature.select = True
+    bpy.ops.object.parent_set(type='ARMATURE_AUTO')
+    #retarget
+    bvh_armature = importbvh()
+    factor = scalebvh(bvh_armature, armature)
+    map = associateArmature(bvh_armature, armature)
+    #changeArmPose(bvh_armature, armature, map, factor)
+    copyTranslate(bvh_armature, armature, map, factor)
+    copyRotate(bvh_armature, armature, map, factor)
+    bpy.data.objects["07_02"].select = True
+    bpy.ops.object.delete()
+    playbvh()
