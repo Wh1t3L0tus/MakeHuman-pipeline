@@ -356,10 +356,10 @@ def copyTranslate(bvh_arm, arm, map, factor):
     bpy.ops.object.select_all(action='DESELECT')
     arm.select = True
     bpy.data.scenes["Scene"].tool_settings.use_keyframe_insert_auto = True
-    current_frame = 0
+    current_frame = 2
     bpy.data.scenes["Scene"].frame_set(current_frame)
     Tprev = bvh_arm.pose.bones[map['hips']].location.copy()
-    for current_frame in range (1,330,1):
+    for current_frame in range (2,330,1):
         bpy.data.scenes["Scene"].frame_set(current_frame)
         Tnext = bvh_arm.pose.bones[map['hips']].location.copy()
         T = (Tnext[0] - Tprev[0])*factor, -(Tnext[2] - Tprev[2])*factor, (Tnext[1] - Tprev[1])*factor
@@ -378,9 +378,9 @@ def copyRotate(bvh_arm, arm, map, factor) :
     bpy.ops.object.mode_set(mode='POSE')
     bpy.data.scenes["Scene"].tool_settings.use_keyframe_insert_auto = True
     for key in map :
-        current_frame = 1
+        current_frame = 2
         bpy.data.scenes["Scene"].frame_set(current_frame)
-        Rprev = bvh_arm.pose.bones[map[key]].rotation_euler.copy()
+        Rprev = bvh_arm.pose.bones[map[key]].rotation_euler.copy()  
         for current_frame in range (2,330,10):
             arm.data.bones[key].select = True
             bpy.data.scenes["Scene"].frame_set(current_frame)
@@ -463,5 +463,5 @@ if __name__ == '__main__':
     copyTranslate(bvh_armature, armature, map, factor)
     copyRotate(bvh_armature, armature, map, factor)
     bpy.data.objects["07_02"].select = True
-    bpy.ops.object.delete()
+    #bpy.ops.object.delete()
     playbvh()
