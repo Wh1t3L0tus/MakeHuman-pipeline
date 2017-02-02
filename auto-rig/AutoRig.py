@@ -161,24 +161,28 @@ def CreateSkeleton():
     bone = Bone("underarm.R", skeleton.GetBoneByName("arm.R").tail,Points["poignet.D"],  "arm.R", True)
     skeleton.AddBone(bone)
 
+    #hand.R
+    bone = Bone("hand.R", skeleton.GetBoneByName("underarm.R").tail, skeleton.GetBoneByName("underarm.R").tail+Vector((0.1,0.1,0.1)), "underarm.R", True)
+    skeleton.AddBone(bone)
+
     #thumb.R
-    bone = Bone("thumb.R", skeleton.GetBoneByName("underarm.R").tail,Points["pouce.D"],  "underarm.R", True)
+    bone = Bone("thumb.R", skeleton.GetBoneByName("hand.R").tail,Points["pouce.D"],  "hand.R", True)
     skeleton.AddBone(bone)
 
     #index.R
-    bone = Bone("index.R", skeleton.GetBoneByName("underarm.R").tail,Points["index.D"],  "underarm.R", True)
+    bone = Bone("index.R", skeleton.GetBoneByName("hand.R").tail,Points["index.D"],  "hand.R", True)
     skeleton.AddBone(bone)
 
     #major.R
-    bone = Bone("major.R", skeleton.GetBoneByName("underarm.R").tail,Points["majeur.D"],  "underarm.R", True)
+    bone = Bone("major.R", skeleton.GetBoneByName("hand.R").tail,Points["majeur.D"],  "hand.R", True)
     skeleton.AddBone(bone)
 
     #annular.R
-    bone = Bone("annular.R", skeleton.GetBoneByName("underarm.R").tail,Points["annulaire.D"],  "underarm.R", True)
+    bone = Bone("annular.R", skeleton.GetBoneByName("hand.R").tail,Points["annulaire.D"],  "hand.R", True)
     skeleton.AddBone(bone)
 
     #atrial.R
-    bone = Bone("atrial.R", skeleton.GetBoneByName("underarm.R").tail,Points["auriculaire.D"],  "underarm.R", True)
+    bone = Bone("atrial.R", skeleton.GetBoneByName("hand.R").tail,Points["auriculaire.D"],  "hand.R", True)
     skeleton.AddBone(bone)
 
     #clavicle.L
@@ -194,27 +198,32 @@ def CreateSkeleton():
     bone = Bone("underarm.L", skeleton.GetBoneByName("arm.L").tail,Points["poignet.G"],  "arm.L", True)
     skeleton.AddBone(bone)
 
+    #hand.R
+    bone = Bone("hand.L", skeleton.GetBoneByName("underarm.L").tail, skeleton.GetBoneByName("underarm.L").tail+Vector((0.1,0.1,0.1)), "underarm.L", True)
+    skeleton.AddBone(bone)
+
     #thumb.L
-    bone = Bone("thumb.L", skeleton.GetBoneByName("underarm.L").tail,Points["pouce.G"],  "underarm.L", True)
+    bone = Bone("thumb.L", skeleton.GetBoneByName("hand.L").tail,Points["pouce.G"],  "hand.L", True)
     skeleton.AddBone(bone)
 
     #index.L
-    bone = Bone("index.L", skeleton.GetBoneByName("underarm.L").tail,Points["index.G"],  "underarm.L", True)
+    bone = Bone("index.L", skeleton.GetBoneByName("hand.L").tail,Points["index.G"],  "hand.L", True)
     skeleton.AddBone(bone)
 
     #major.L
-    bone = Bone("major.L", skeleton.GetBoneByName("underarm.L").tail,Points["majeur.G"],  "underarm.L", True)
+    bone = Bone("major.L", skeleton.GetBoneByName("hand.L").tail,Points["majeur.G"],  "hand.L", True)
     skeleton.AddBone(bone)
 
     #annular.L
-    bone = Bone("annular.L", skeleton.GetBoneByName("underarm.L").tail,Points["annulaire.G"],  "underarm.L", True)
+    bone = Bone("annular.L", skeleton.GetBoneByName("hand.L").tail,Points["annulaire.G"],  "hand.L", True)
     skeleton.AddBone(bone)
 
     #atrial.L
-    bone = Bone("atrial.L", skeleton.GetBoneByName("underarm.L").tail,Points["auriculaire.G"],  "underarm.L", True)
+    bone = Bone("atrial.L", skeleton.GetBoneByName("hand.L").tail,Points["auriculaire.G"],  "hand.L", True)
     skeleton.AddBone(bone)
 
     return skeleton
+
 
 def GetBoneByName(amt, name):
 	if name == "":
@@ -266,7 +275,7 @@ def importbvh(file_path = "07_02"):
         use_fps_scale=False, update_scene_fps=False,
         update_scene_duration=False, use_cyclic=False,
         rotate_mode='NATIVE')
-        bvh_armature = bpy.data.objects[file_path]
+        bvh_armature = bpy.data.objects[file_path[-5:]]
     except:
         print ("Couldn't open file")
     return bvh_armature
@@ -284,6 +293,59 @@ def scalebvh(bvh_armature, armature):
     factor = end_rad / perf_rad
     bvh_armature.scale = factor * Vector((1, 1, 1))
     return factor
+
+#tentative de retargeting n°2 (non fonctionnel)
+"""
+def createMap(bvh_arm, arm):
+    map = {}
+    bpy.ops.object.mode_set(mode='EDIT')
+    for bone in bvh_arm.data.bones:
+        if("L." in bone.name or "Left" in bone.name or "L " in bone.name or ".L" in bone.name):
+            if("hand" in bone.name.lower()):
+                map["hand.L"] = bone.name
+            elif("foot" in bone.name.lower() or "toe" in bone.name.lower()):
+                map["foot.L"] = bone.name
+        elif("R." in bone.name or "Right" in bone.name or "R " in bone.name or ".R" in bone.name):
+            if("hand" in bone.name.lower()):
+                map["hand.R"] = bone.name
+            elif("foot" in bone.name.lower() or "toe" in bone.name.lower()):
+                map["foot.R"] = bone.name
+        else:
+            if("head" in bone.name.lower()):
+                map["head"] = bone.name
+            elif("hips" in bone.name.lower()):
+                map["hips"] = bone.name
+    if("hand.L" in map and "hand.R" in map and "foot.L" in map and "foot.R" in map and "head" in map and "hips" in map):
+        bpy.ops.object.mode_set(mode="OBJECT")
+        return map
+    else:
+        map = {}
+        return "ERROR"
+
+def completeMap(bvh_arm, arm, map):
+    bvh_cpt = 0
+    bvh_pbone = bvh_arm.data.bones[map["head"]]
+    while bvh_pbone.name != "hips":
+        bvh_pbone = bvh_pbone.parent
+        bvh_cpt += 1
+    cpt = 0
+    pbone = arm.data.bones["head"]
+    while pbone.name != "hips":
+        pbone = pbone.parent
+        cpt += 1
+    temp = bvh_cpt // cpt
+    
+    pbone = arm.data.bones["head"]
+    bvh_pbone = bvh_arm.data.bones[map["head"]]
+    while pbone.name != "hips":
+        for i in range (0, temp, 1) and pbone.name != "hips":
+            pbone = pbone.parent
+            bvh_pbone = bvh_pbone.parent
+            if pbone.name != "hips":
+                map[pbone.name] = bvh_pbone.name
+"""            
+    
+    
     
 def associateArmature(bvh_arm, arm):
     map = {}
@@ -355,52 +417,47 @@ def copyTranslate(bvh_arm, arm, map, factor):
     #on deselect tous les objets
     bpy.ops.object.mode_set(mode='OBJECT')
     bpy.ops.object.select_all(action='DESELECT')
-    #on select l'armature et on set la frame à 2 (le début de l'anim)
+    #on select l'armature et plus précisément le hips
     arm.select = True
-    bpy.data.scenes["Scene"].tool_settings.use_keyframe_insert_auto = True
+    bpy.context.scene.objects.active = arm
+    #on set la frame à 2 (le début de l'anim)
     current_frame = 2
     bpy.data.scenes["Scene"].frame_set(current_frame)
-    Tprev = bvh_arm.pose.bones[map['hips']].location.copy()
-    #copy de la position initial
-    #arm.pose.bones['hips'].location = Tprev*factor
-    #bpy.ops.transform.translate(value=((-Ttemp+Tprev)*factor), constraint_axis=(False,False,False), constraint_orientation='GLOBAL')
+    bpy.data.scenes["Scene"].tool_settings.use_keyframe_insert_auto = True
     #boucle de parcours des keyframes
+    Tprev = bvh_arm.pose.bones[map['hips']].location.copy()
     for current_frame in range (2,330,1):
         bpy.data.scenes["Scene"].frame_set(current_frame)
         Tnext = bvh_arm.pose.bones[map['hips']].location.copy()
-        T = (Tnext[0] - Tprev[0])*factor, -(Tnext[2] - Tprev[2])*factor, (Tnext[1] - Tprev[1])*factor
-        print(Tnext, " - ", Tprev, "for frame : ", current_frame)
+        T = Vector(((Tnext[0] - Tprev[0])*factor, -(Tnext[2] - Tprev[2])*factor, (Tnext[1] - Tprev[1])*factor))
         bpy.ops.transform.translate(value=T, constraint_axis=(False,False,False), constraint_orientation='GLOBAL')
         Tprev = bvh_arm.pose.bones[map['hips']].location.copy()
+    #On stop le record d'animation et on déselectionne tous les objets
     bpy.data.scenes["Scene"].tool_settings.use_keyframe_insert_auto = False
     bpy.ops.object.mode_set(mode='OBJECT')
     bpy.ops.object.select_all(action='DESELECT')
 
 def copyRotate(bvh_arm, arm, map, factor) :
+    #On selectionne l'armature
     bpy.ops.object.mode_set(mode='OBJECT')
     bpy.ops.object.select_all(action='DESELECT')
     arm.select = True
     bpy.context.scene.objects.active = arm
     bpy.ops.object.mode_set(mode='POSE')
+    #On démarre le record de keyframe
     bpy.data.scenes["Scene"].tool_settings.use_keyframe_insert_auto = True
+    #On boucle sur toutes les clés de la map
     for key in map :
         current_frame = 2
         bpy.data.scenes["Scene"].frame_set(current_frame)
+        #boucle qui copie les keyframe du pose bone courant une a une
         Rprev = bvh_arm.pose.bones[map[key]].rotation_euler.copy()
-        #copy les rotations initiales
-        arm.data.bones[key].select = True
-        bpy.ops.transform.rotate(value=(-Rprev[0]), axis=(1,0,0), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
-        bpy.ops.transform.rotate(value=(-Rprev[2]), axis=(0,1,0), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
-        bpy.ops.transform.rotate(value=(-Rprev[1]), axis=(0,0,1), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
-        bvh_arm.pose.bones[map[key]].bbone_rollin = bvh_arm.pose.bones[map[key]].bbone_rollin
-        bvh_arm.pose.bones[map[key]].bbone_rollout = bvh_arm.pose.bones[map[key]].bbone_rollout
-        #boucle qui copie les keyframe une a une
-        for current_frame in range (3,330,5):
+        for current_frame in range (2,330,10):
             arm.data.bones[key].select = True
             arm.pose.bones[key].rotation_mode = bvh_arm.pose.bones[map[key]].rotation_mode
             bpy.data.scenes["Scene"].frame_set(current_frame)
             Rnext = bvh_arm.pose.bones[map[key]].rotation_euler.copy()
-            #0->2->1
+            #print(arm.data.bones[key].name + " is rotate by : " + str(Vector((-(Rnext[0]-Rprev[0]), -(Rnext[2]-Rprev[2]), -(Rnext[1]-Rprev[1])))))
             bpy.ops.transform.rotate(value=-(Rnext[0]-Rprev[0]), axis=(1,0,0), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
             bpy.ops.transform.rotate(value=-(Rnext[2]-Rprev[2]), axis=(0,1,0), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
             bpy.ops.transform.rotate(value=-(Rnext[1]-Rprev[1]), axis=(0,0,1), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
@@ -408,38 +465,50 @@ def copyRotate(bvh_arm, arm, map, factor) :
             bvh_arm.pose.bones[map[key]].bbone_rollout = bvh_arm.pose.bones[map[key]].bbone_rollout
             Rprev = bvh_arm.pose.bones[map[key]].rotation_euler.copy()
             arm.data.bones[key].select = False
+    #on stop le record
     bpy.data.scenes["Scene"].tool_settings.use_keyframe_insert_auto = False
+    #on deselectionne tous les objets
     bpy.ops.object.mode_set(mode='OBJECT')
     bpy.ops.object.select_all(action='DESELECT')
 
+#fonction qui permet de set la position initiale
 def changeArmPose(bvh_arm, arm, map, factor):
+    #selection de l'armature
     bpy.ops.object.mode_set(mode='OBJECT')
     bpy.ops.object.select_all(action='DESELECT')
     arm.select = True
     bpy.context.scene.objects.active = arm
+    #copy de la position initial
+    #End = bvh_arm.pose.bones[map['hips']].location.copy()*factor
+    #Start = arm.pose.bones['hips'].location.copy()
+    #T = Vector((End[0] - Start[0], End[2] - Start[1], End[1] - Start[2]))
+    #bpy.ops.transform.translate(value=T, constraint_axis=(False,False,False), constraint_orientation='GLOBAL')
+    #copy des rotations initiales
     bpy.ops.object.mode_set(mode='POSE')
-    current_frame = 1
+    current_frame = 2
     bpy.data.scenes["Scene"].frame_set(current_frame)
     for key in map :
         arm.data.bones[key].select = True
         Rbvharm = bvh_arm.pose.bones[map[key]].rotation_euler.copy()
         Rarm = arm.pose.bones[key].rotation_euler.copy()
-        bpy.ops.transform.rotate(value=(Rbvharm[0]-Rarm[0]), axis=(1,0,0), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
-        bpy.ops.transform.rotate(value=(Rbvharm[2]-Rarm[2]), axis=(0,1,0), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
-        bpy.ops.transform.rotate(value=(Rbvharm[1]-Rarm[1]), axis=(0,0,1), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
+        bpy.ops.transform.rotate(value=-(factor*Rbvharm[0]-Rarm[0]), axis=(1,0,0), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
+        bpy.ops.transform.rotate(value=-(factor*Rbvharm[2]-Rarm[1]), axis=(0,1,0), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
+        bpy.ops.transform.rotate(value=-(factor*Rbvharm[1]-Rarm[2]), axis=(0,0,1), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
         arm.data.bones[key].select = False
     bpy.ops.object.mode_set(mode='OBJECT')
     bpy.ops.object.select_all(action='DESELECT')
-
+    
+"""
 def rename(bvh_arm, arm, map) :
     for key in map :
         if map[key] in arm.data.bones :
             arm.data.bones[map[key]].name = bvh_arm.data.bones[key].name
         if map[key] in arm.pose.bones :
             arm.pose.bones[map[key]].name = bvh_arm.pose.bones[key].name
+"""
 
 def playbvh():
-    bpy.data.scenes["Scene"].frame_start = 1
+    bpy.data.scenes["Scene"].frame_start = 2
     bpy.data.scenes["Scene"].frame_end = 330
     bpy.ops.screen.animation_play()
     
@@ -472,12 +541,11 @@ if __name__ == '__main__':
     armature.select = True
     bpy.ops.object.parent_set(type='ARMATURE_AUTO')
     #retarget
-    bvh_armature = importbvh()
+    bvh_armature = importbvh("BVH/01/01_01")
     factor = scalebvh(bvh_armature, armature)
     map = associateArmature(bvh_armature, armature)
-    #changeArmPose(bvh_armature, armature, map, factor)
+    changeArmPose(bvh_armature, armature, map, factor)
     copyTranslate(bvh_armature, armature, map, factor)
     copyRotate(bvh_armature, armature, map, factor)
-    bpy.data.objects["07_02"].select = True
-    #bpy.ops.object.delete()
+    print(str(map))
     playbvh()
