@@ -352,13 +352,19 @@ def createAnim(bvh_arm, arm, map):
         print("no need to create new action")
 
 def copyTranslate(bvh_arm, arm, map, factor):
+    #on deselect tous les objets
     bpy.ops.object.mode_set(mode='OBJECT')
     bpy.ops.object.select_all(action='DESELECT')
+    #on select l'armature et on set la frame à 2 (le début de l'anim)
     arm.select = True
     bpy.data.scenes["Scene"].tool_settings.use_keyframe_insert_auto = True
     current_frame = 2
     bpy.data.scenes["Scene"].frame_set(current_frame)
     Tprev = bvh_arm.pose.bones[map['hips']].location.copy()
+    #copy de la position initial
+    #arm.pose.bones['hips'].location = Tprev*factor
+    #bpy.ops.transform.translate(value=((-Ttemp+Tprev)*factor), constraint_axis=(False,False,False), constraint_orientation='GLOBAL')
+    #boucle de parcours des keyframes
     for current_frame in range (2,330,1):
         bpy.data.scenes["Scene"].frame_set(current_frame)
         Tnext = bvh_arm.pose.bones[map['hips']].location.copy()
@@ -380,11 +386,21 @@ def copyRotate(bvh_arm, arm, map, factor) :
     for key in map :
         current_frame = 2
         bpy.data.scenes["Scene"].frame_set(current_frame)
-        Rprev = bvh_arm.pose.bones[map[key]].rotation_euler.copy()  
-        for current_frame in range (2,330,10):
+        Rprev = bvh_arm.pose.bones[map[key]].rotation_euler.copy()
+        #copy les rotations initiales
+        arm.data.bones[key].select = True
+        bpy.ops.transform.rotate(value=(-Rprev[0]), axis=(1,0,0), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
+        bpy.ops.transform.rotate(value=(-Rprev[2]), axis=(0,1,0), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
+        bpy.ops.transform.rotate(value=(-Rprev[1]), axis=(0,0,1), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
+        bvh_arm.pose.bones[map[key]].bbone_rollin = bvh_arm.pose.bones[map[key]].bbone_rollin
+        bvh_arm.pose.bones[map[key]].bbone_rollout = bvh_arm.pose.bones[map[key]].bbone_rollout
+        #boucle qui copie les keyframe une a une
+        for current_frame in range (3,330,5):
             arm.data.bones[key].select = True
+            arm.pose.bones[key].rotation_mode = bvh_arm.pose.bones[map[key]].rotation_mode
             bpy.data.scenes["Scene"].frame_set(current_frame)
             Rnext = bvh_arm.pose.bones[map[key]].rotation_euler.copy()
+            #0->2->1
             bpy.ops.transform.rotate(value=-(Rnext[0]-Rprev[0]), axis=(1,0,0), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
             bpy.ops.transform.rotate(value=-(Rnext[2]-Rprev[2]), axis=(0,1,0), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
             bpy.ops.transform.rotate(value=-(Rnext[1]-Rprev[1]), axis=(0,0,1), constraint_axis=(False,False,False), constraint_orientation = 'GLOBAL')
