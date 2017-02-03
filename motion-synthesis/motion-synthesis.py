@@ -35,19 +35,39 @@ def generateWalkAnimation():
     thighR = getObject('IKthighR')
     thighL = getObject('IKthighL')
 
+    armR = getObject('IKarmR')
+    armL = getObject('IKarmL')
+
     thighL.location = (-1.14, -0.40, 7.02)
     thighR.location = (0.95, -0.37, 6.96)
 
-    for frame in range(0, 100):
+    armBaseHeight = 5
+    armOffset = 2
+    footOffset = 1.2
+    speedFactor = 2
+    frameCount = 100
+    armAmplitude = 1
+    footAmplitude = 2.5
 
-        t = 3.6 * frame
+    bpy.data.scenes['Scene'].frame_start = 0
+    bpy.data.scenes['Scene'].frame_end = frameCount
+    for frame in range(0, frameCount):
+
+        t = (360 / frameCount) * frame
         offset = 180
 
-        calveR.location = (-1.2, math.cos(math.radians(t * 2)) * 2.5, -math.sin(-math.radians(t * 2)) * 2.5)
+        calveR.location = (-footOffset, math.cos(math.radians(t * speedFactor)) * footAmplitude, -math.sin(-math.radians(t * speedFactor)) * footAmplitude)
         calveR.keyframe_insert(data_path="location", frame=frame)
 
-        calveL.location = (1.2, math.cos(math.radians(t * 2 - offset)) * 2.5, -math.sin(-math.radians(t * 2 - offset)) * 2.5)
+        calveL.location = (footOffset, math.cos(math.radians(t * speedFactor - offset)) * footAmplitude, -math.sin(-math.radians(t * speedFactor - offset)) * footAmplitude)
         calveL.keyframe_insert(data_path="location", frame=frame)
+
+        armR.location = (-armOffset, math.cos(math.radians(t * speedFactor - offset)) * armAmplitude, armBaseHeight + -math.sin(-math.radians(t * speedFactor - offset)) * armAmplitude)
+        armR.keyframe_insert(data_path="location", frame=frame)
+
+        armL.location = (armOffset, math.cos(math.radians(t * speedFactor)) * armAmplitude, armBaseHeight + -math.sin(-math.radians(t * speedFactor)) * armAmplitude)
+        armL.keyframe_insert(data_path="location", frame=frame)
+
 
 def removeWalkAnimation():
     bpy.ops.pose.select_all(action='SELECT')
