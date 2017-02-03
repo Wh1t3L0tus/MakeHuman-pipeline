@@ -32,7 +32,11 @@ def generateWalkAnimation():
     calveR = getObject('IKcalveR')
     calveL = getObject('IKcalveL')
 
-    footOrigR = (0, 0, 10)
+    thighR = getObject('IKthighR')
+    thighL = getObject('IKthighL')
+
+    thighL.location = (-1.14, -0.40, 7.02)
+    thighR.location = (0.95, -0.37, 6.96)
 
     for frame in range(0, 100):
 
@@ -83,7 +87,7 @@ class LayoutDemoPanel(bpy.types.Panel):
         row.operator("tz.walkgen")
         
         row2 = row.row()
-        row2.operator("tz.rmwalk")
+        row2.operator("screen.animation_play", text="Play/Pause Animation")
 
 def register():
     bpy.utils.register_class(GenerateWalkAnimOperator)
